@@ -15,5 +15,3 @@ The split build creates device-specific APKs with `flutter build apk --release -
 Release builds are unsigned unless `android/key.properties` and its referenced keystore are provided locally. Signing secrets and keystores are ignored by Git; CI builds debug APKs and does not require signing credentials.
 
 This project is for personal sideloading and is not signed for Google Play distribution.
-
-Built with [Codex](https://github.com/codex).
