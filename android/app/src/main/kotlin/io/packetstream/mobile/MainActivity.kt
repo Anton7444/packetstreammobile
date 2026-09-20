@@ -1,15 +1,15 @@
-package com.example.packetstream_mobile
+package io.packetstream.mobile
 
 import android.webkit.CookieManager
 import io.flutter.embedding.engine.FlutterEngine
 import io.flutter.embedding.android.FlutterActivity
 import io.flutter.plugin.common.MethodCall
 import io.flutter.plugin.common.MethodChannel
-import com.example.packetstream_mobile.widget.PacketStreamWidgetProvider
-import com.example.packetstream_mobile.widget.PacketStreamWidgetScheduler
-import com.example.packetstream_mobile.widget.PacketStreamWidgetStore
-import com.example.packetstream_mobile.widget.PacketStreamWidgetIntervals
-import com.example.packetstream_mobile.widget.WidgetSummary
+import io.packetstream.mobile.widget.PacketStreamWidgetProvider
+import io.packetstream.mobile.widget.PacketStreamWidgetScheduler
+import io.packetstream.mobile.widget.PacketStreamWidgetStore
+import io.packetstream.mobile.widget.PacketStreamWidgetIntervals
+import io.packetstream.mobile.widget.WidgetSummary
 
 class MainActivity : FlutterActivity() {
     override fun configureFlutterEngine(flutterEngine: FlutterEngine) {

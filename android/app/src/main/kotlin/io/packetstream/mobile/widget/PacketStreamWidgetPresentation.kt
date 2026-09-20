@@ -1,4 +1,4 @@
-package com.example.packetstream_mobile.widget
+package io.packetstream.mobile.widget
 
 data class RefreshControlVisibility(
     val showIcon: Boolean,

@@ -1,6 +1,6 @@
 String formatBytes(int bytes, [int precision = 4]) {
   if (bytes < 0) throw const FormatException('Invalid bandwidth');
-  final adjusted = bytes * 1.074;
+  final adjusted = bytes.toDouble();
   if (adjusted < 1024) return '${adjusted.round()} Bytes';
   if (adjusted < 1048576) {
     return '${_formatPrecision(adjusted / 1024, precision)} KB';

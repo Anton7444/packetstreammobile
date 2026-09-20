@@ -1,4 +1,4 @@
-package com.example.packetstream_mobile.widget
+package io.packetstream.mobile.widget
 
 import android.app.PendingIntent
 import android.appwidget.AppWidgetManager
@@ -9,8 +9,8 @@ import android.content.Intent
 import android.view.View
 import android.widget.RemoteViews
 import androidx.annotation.Keep
-import com.example.packetstream_mobile.MainActivity
-import com.example.packetstream_mobile.R
+import io.packetstream.mobile.MainActivity
+import io.packetstream.mobile.R
 import java.text.DateFormat
 import java.util.Date
 import java.util.Locale
@@ -103,7 +103,7 @@ class PacketStreamWidgetProvider : AppWidgetProvider() {
 
         fun formatBytes(bytes: Long, precision: Int = 4): String {
             if (bytes < 0) return "0 Bytes"
-            val adjusted = bytes * 1.074
+            val adjusted = bytes.toDouble()
             return when {
                 adjusted < 1024 -> "${Math.round(adjusted)} Bytes"
                 adjusted < 1048576 -> "${formatPrecision(adjusted / 1024, precision)} KB"

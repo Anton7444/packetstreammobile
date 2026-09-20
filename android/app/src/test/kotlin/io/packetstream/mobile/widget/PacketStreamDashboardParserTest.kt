@@ -1,4 +1,4 @@
-package com.example.packetstream_mobile.widget
+package io.packetstream.mobile.widget
 
 import org.junit.Assert.assertEquals
 import org.junit.Assert.assertThrows
@@ -74,6 +74,20 @@ class PacketStreamDashboardParserTest {
     @Test
     fun `parses dashboard when report string contains escaped single quote`() {
         val html = validHtml().replace("{\"exitnode\":[]}", "{\"exitnode\":[],\"note\":\"user\\'s data\"}")
+
+        val summary = PacketStreamDashboardParser.parse(html, now)
+
+        assertEquals(0L, summary.bandwidthBytes)
+        assertEquals("0.01", summary.balance)
+    }
+
+    @Test
+    fun `parses harmless whitespace and attribute-order variations`() {
+        val html = validHtml()
+            .replace("class=\"metric-card-balance\"", "class = 'metric-card-balance extra'")
+            .replace("class=\"default-font\"", "data-role=\"value\" class = 'fw-600 default-font'")
+            .replace("Last 14 Days", "  LAST   14   DAYS  ")
+            .replace("const rd =", "const   rd   =")
 
         val summary = PacketStreamDashboardParser.parse(html, now)
 

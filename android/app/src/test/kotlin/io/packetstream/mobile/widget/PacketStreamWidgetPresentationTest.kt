@@ -1,4 +1,4 @@
-package com.example.packetstream_mobile.widget
+package io.packetstream.mobile.widget
 
 import org.junit.Assert.assertFalse
 import org.junit.Assert.assertTrue
@@ -24,11 +24,11 @@ class PacketStreamWidgetPresentationTest {
     }
 
     @Test
-    fun formatBytesMatchesWebsiteConversion() {
-        org.junit.Assert.assertEquals("884 Bytes", PacketStreamWidgetProvider.formatBytes(823L))
-        org.junit.Assert.assertEquals("504.5 KB", PacketStreamWidgetProvider.formatBytes(481000L))
-        org.junit.Assert.assertEquals("493.7 MB", PacketStreamWidgetProvider.formatBytes(482000000L))
-        org.junit.Assert.assertEquals("589.4 MB", PacketStreamWidgetProvider.formatBytes(575400000L))
-        org.junit.Assert.assertEquals("1.420 GB", PacketStreamWidgetProvider.formatBytes(1420000000L))
+    fun formatBytesUsesTheActualByteCount() {
+        org.junit.Assert.assertEquals("823 Bytes", PacketStreamWidgetProvider.formatBytes(823L))
+        org.junit.Assert.assertEquals("469.7 KB", PacketStreamWidgetProvider.formatBytes(481000L))
+        org.junit.Assert.assertEquals("459.7 MB", PacketStreamWidgetProvider.formatBytes(482000000L))
+        org.junit.Assert.assertEquals("548.7 MB", PacketStreamWidgetProvider.formatBytes(575400000L))
+        org.junit.Assert.assertEquals("1.322 GB", PacketStreamWidgetProvider.formatBytes(1420000000L))
     }
 }

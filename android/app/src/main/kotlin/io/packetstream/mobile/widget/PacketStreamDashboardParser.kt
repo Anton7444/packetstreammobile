@@ -1,4 +1,4 @@
-package com.example.packetstream_mobile.widget
+package io.packetstream.mobile.widget
 
 import java.text.ParseException
 import java.text.SimpleDateFormat
@@ -11,44 +11,38 @@ data class WidgetSummary(val bandwidthBytes: Long, val balance: String, val fetc
 class DashboardParseException(message: String, cause: Throwable? = null) : IllegalArgumentException(message, cause)
 
 object PacketStreamDashboardParser {
-    private val balanceElement = Regex("metric-card-balance[\\s\\S]*?<h2[^>]*class=\"[^\"]*default-font[^\"]*\"[^>]*>[\\s\\S]*?</h2>", RegexOption.IGNORE_CASE)
-    private val balanceValue = Regex("\\$([0-9,]+(?:\\.[0-9]+)?)")
+    private val balanceElement = Regex(
+        "metric-card-balance\\b[\\s\\S]*?<h2\\b[^>]*class\\s*=\\s*['\"][^>]*default-font[^>]*['\"][^>]*>[\\s\\S]*?</h2>",
+        RegexOption.IGNORE_CASE,
+    )
+    private val balanceValue = Regex("\\$\\s*([0-9,]+(?:\\.[0-9]+)?)")
     private val soldPeriod = Regex("metric-card-sold[\\s\\S]*?Last\\s+14\\s+Days", RegexOption.IGNORE_CASE)
     private val reportAssignment = Regex("(?:(?:const|var|let)\\s+rd|window\\.reportData)\\s*=", RegexOption.IGNORE_CASE)
     private val dateFormat = SimpleDateFormat("yyyy-MM-dd", Locale.US).apply { isLenient = false; timeZone = TimeZone.getTimeZone("UTC") }
 
     fun parse(html: String, nowMillis: Long): WidgetSummary {
-        WidgetLog.e("PARSER_BUILD_V3_ENTERED")
         var stage = "balance element"
         try {
             val balanceMatch = balanceElement.find(html)
-            WidgetLog.e("balance element matched=${balanceMatch != null}")
             if (balanceMatch == null) throw DashboardParseException("balance element stage failed")
             stage = "balance text"
             val balance = balanceValue.find(balanceMatch.value)?.groupValues?.get(1)
-            WidgetLog.e("balance text extracted=${balance != null}")
             if (balance == null) throw DashboardParseException("balance text stage failed")
             if (!soldPeriod.containsMatchIn(html)) throw DashboardParseException("dashboard period label missing")
 
             stage = "reportData assignment"
             val assignment = reportAssignment.find(html)
-            WidgetLog.e("reportData assignment matched=${assignment != null}")
             if (assignment == null) throw DashboardParseException("reportData assignment stage failed")
             stage = "reportData object"
             val extracted = extractAssignedValue(html, assignment.range.last + 1)
-            WidgetLog.e("reportData object extracted=true")
             stage = "reportData JSON"
             val exitnodeArray = extractNamedArray(extracted, "exitnode")
-            WidgetLog.e("reportData JSON parsed=true")
             stage = "exitnode"
             val rows = extractObjects(exitnodeArray)
-            WidgetLog.e("exitnode parsed=true")
-            WidgetLog.e("exitnode row count=${rows.size}")
             stage = "rows"
             val total = sumRows(rows, nowMillis)
             stage = "summary"
             val summary = WidgetSummary(total, balance.replace(",", ""), nowMillis)
-            WidgetLog.e("final summary parsed=true")
             return summary
         } catch (error: DashboardParseException) {
             WidgetLog.e("parser stage=$stage failed class=${error.javaClass.simpleName} message=${WidgetLog.safeMessage(error.message)}")

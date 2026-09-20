@@ -1,4 +1,4 @@
-package com.example.packetstream_mobile.widget
+package io.packetstream.mobile.widget
 
 import org.junit.Assert.assertEquals
 import org.junit.Assert.assertTrue

@@ -89,7 +89,7 @@ void main() {
     repository.pending.complete(sample());
     await request;
     await tester.pumpAndSettle();
-    expect(find.text('493.7 MB'), findsOneWidget);
+    expect(find.text('459.7 MB'), findsOneWidget);
     expect(find.text('\$0.0048'), findsOneWidget);
     expect(find.text('Connected'), findsOneWidget);
   });

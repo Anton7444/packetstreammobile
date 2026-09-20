@@ -4,10 +4,10 @@ import 'package:packetstream_mobile/models/packetstream_summary.dart';
 
 void main() {
   test('formats bandwidth using website conversion and units', () {
-    expect(formatBytes(823), '884 Bytes');
-    expect(formatBytes(481000), '504.5 KB');
-    expect(formatBytes(482000000), '493.7 MB');
-    expect(formatBytes(1420000000), '1.420 GB');
+    expect(formatBytes(823), '823 Bytes');
+    expect(formatBytes(481000), '469.7 KB');
+    expect(formatBytes(482000000), '459.7 MB');
+    expect(formatBytes(1420000000), '1.322 GB');
   });
   test('keeps fractional cents supplied by the source', () {
     expect(formatBalance('0.0048'), '\$0.0048');

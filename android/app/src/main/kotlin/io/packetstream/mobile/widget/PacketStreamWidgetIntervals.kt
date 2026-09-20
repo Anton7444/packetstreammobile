@@ -1,4 +1,4 @@
-package com.example.packetstream_mobile.widget
+package io.packetstream.mobile.widget
 
 object PacketStreamWidgetIntervals {
     const val DEFAULT_MINUTES = 60L

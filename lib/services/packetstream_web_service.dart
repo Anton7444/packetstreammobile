@@ -5,6 +5,7 @@ import 'package:webview_flutter/webview_flutter.dart';
 import '../models/packetstream_summary.dart';
 import 'packetstream_repository.dart';
 import 'widget_bridge.dart';
+import 'web_resource_error_policy.dart';
 
 const dashboardUrl = 'https://app.packetstream.io/dashboard';
 
@@ -15,6 +16,7 @@ class PacketStreamWebService implements PacketStreamRepository {
   final WidgetBridge widgetBridge;
   Completer<PacketStreamSummary>? _pending;
   Completer<bool>? _login;
+  String? _mainFrameUrl;
   PacketStreamWebService({WidgetBridge? widgetBridge})
     : widgetBridge = widgetBridge ?? WidgetBridge() {
     webView = WebViewController()
@@ -26,6 +28,7 @@ class PacketStreamWebService implements PacketStreamRepository {
             if (request.url == 'about:blank' ||
                 (uri?.scheme == 'https' &&
                     uri?.host == 'app.packetstream.io')) {
+              _mainFrameUrl = request.url;
               return NavigationDecision.navigate;
             }
             authError.value = 'This link cannot open inside sign-in.';
@@ -42,8 +45,16 @@ class PacketStreamWebService implements PacketStreamRepository {
             }
           },
           onHttpError: (error) {
-            final status = error.response?.statusCode;
-            _fail(status == 401 ? SessionExpired() : DashboardUnavailable());
+            final failure = dashboardHttpError(
+              error.response?.statusCode,
+              requestUrl: error.request?.uri.toString(),
+              currentUrl: _mainFrameUrl,
+            );
+            if (failure == DashboardHttpFailure.sessionExpired) {
+              _fail(SessionExpired());
+            } else if (failure == DashboardHttpFailure.unavailable) {
+              _fail(DashboardUnavailable());
+            }
           },
         ),
       );
@@ -56,6 +67,7 @@ class PacketStreamWebService implements PacketStreamRepository {
   Future<void> _pageFinished(String url) async {
     final uri = Uri.tryParse(url);
     if (uri?.scheme != 'https' || uri?.host != 'app.packetstream.io') return;
+    _mainFrameUrl = url;
     if (uri!.path == '/login') {
       if (!signingIn.value) _fail(SessionExpired());
       return;
