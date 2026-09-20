@@ -34,7 +34,7 @@ jobs:
 
       - name: Run Android/Kotlin unit tests
         working-directory: android
-        run: ./gradlew test
+        run: chmod +x gradlew && ./gradlew test
 
       - name: Build debug APK
         run: flutter build apk --debug
