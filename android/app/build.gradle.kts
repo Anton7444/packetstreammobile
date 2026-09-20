@@ -1,3 +1,4 @@
+import java.io.File
 import java.util.Properties
 
 val signingPropertiesFile = rootProject.file("key.properties")
@@ -37,6 +38,17 @@ android {
         versionName = flutter.versionName
     }
 
+    signingConfigs {
+        create("release") {
+            if (signingPropertiesFile.exists()) {
+                keyAlias = signingProperties.getProperty("keyAlias")
+                keyPassword = signingProperties.getProperty("keyPassword")
+                storeFile = signingProperties.getProperty("storeFile")?.let(::File)
+                storePassword = signingProperties.getProperty("storePassword")
+            }
+        }
+    }
+
     buildTypes {
         release {
             if (signingPropertiesFile.exists()) {
@@ -46,17 +58,6 @@ android {
                 getDefaultProguardFile("proguard-android-optimize.txt"),
                 "proguard-rules.pro"
             )
-        }
-    }
-
-    signingConfigs {
-        create("release") {
-            if (signingPropertiesFile.exists()) {
-                keyAlias = signingProperties.getProperty("keyAlias")
-                keyPassword = signingProperties.getProperty("keyPassword")
-                storeFile = signingProperties.getProperty("storeFile")?.let(::file)
-                storePassword = signingProperties.getProperty("storePassword")
-            }
         }
     }
 }
