@@ -159,7 +159,7 @@ const extractSummaryScript = r'''
   const label = card?.querySelector('.metric-title')?.textContent.trim();
   const balanceText = card?.querySelector('h2.default-font')?.textContent.trim();
   const sold = document.querySelector('.metric-card-sold .card-subtitle')?.textContent.trim();
-  if (label !== 'Balance' || sold !== 'Last 14 Days' || !/^\$\d[\d,]*(\.\d+)?$/.test(balanceText || '')) return JSON.stringify({ok:false});
+  if (label !== 'Balance' || sold?.toLowerCase() !== 'last 14 days' || !/^\$\d[\d,]*(\.\d+)?$/.test(balanceText || '')) return JSON.stringify({ok:false});
   const records = window.reportData?.exitnode;
   if (!Array.isArray(records)) return JSON.stringify({ok:false});
   const now = new Date();
